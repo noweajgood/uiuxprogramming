@@ -40,24 +40,70 @@
         <p>강아지에게 필요한 영양소가 무엇인지 알 수 있습니다.</p>
         <P>필요한 영양분 공급을 위한 재료 및 레시피를 제공합니다.</P>
     </section>
+
     <section id="features">
         <h2>주요 기능</h2>
-        <ul class="feature-list"> 
-          <li class="feature-card">
-              <h3>강아지 필수 영양소 안내</h3>
-              <p>강아지에게 꼭 필요한 영양소를 파악하고, 이 영양소가 풍부한 레시피를 안내합니다.</p>
-          </li>
+        <div class="tabs" role="tablist" aria-label="기능 선택"> 
+          <button 
+              id= "tab-practice"
+              class="tab is-active"
+              type="button"
+              role="tab"
+              aria-controls="feature-practice"
+              aria-selected="true"
+              data-target="feature-practice">
+              영양소 확인
+         </button> 
 
-          <li class="feature-card">
-              <h3>재료 확인 및 구매 안내</h3>
-              <p>레시피에 필요한 재료를 확인하고, 구매할 수 있는 방법을 안내합니다.</p>
-          </li>
+          <button
+              id= "tab-recipe"
+              class="tab"
+              type="button"
+              role="tab"
+              aria-controls="feature-recipe"
+              aria-selected="false"
+              data-target="feature-recipe">
+              재료 안내
+          </button>
+    
+          <button
+              id= "tab-feedback"
+              class="tab"
+              type="button"
+              role="tab"
+              aria-controls="feature-feedback"
+              aria-selected="false"
+              data-target="feature-feedback">
+              레시피 소개
+          </button>
+        </div>
 
-          <li class="feature-card">
-              <h3>건강식 만드는 방법 안내</h3>
-              <p>레시피에 따라 건강식을 만드는 방법을 안내합니다.</p>
-          </li>
-        </ul>
+        <div
+            id="feature-practice"
+            class="panel is-active"
+            role="tabpanel"
+            aria-labelledby="tab-practice">
+            <h3>영양소 확인</h3>
+            <p>강아지에게 필요한 영양소를 확인할 수 있습니다.</p>
+        </div>
+
+        <div
+            id="feature-recipe"
+            class="panel"
+            role="tabpanel"
+            aria-labelledby="tab-recipe" hidden>
+            <h3>재료 안내</h3>
+            <p>레시피에 필요한 재료를 확인할 수 있습니다.</p>
+        </div>
+
+        <div
+            id="feature-feedback"
+            class="panel"
+            role="tabpanel"
+            aria-labelledby="tab-feedback" hidden>
+            <h3>레시피 소개</h3>
+            <p>레시피에 따라 건강식을 만들어 강아지에게 제공합니다.</p>
+        </div>
     </section>
 
     <section id="steps">
@@ -69,6 +115,38 @@
       <li>레시피에 필요한 재료를 확인하고 구매합니다.</li>
       <li>레시피에 따라 건강식을 만들어 강아지에게 제공합니다.</li>
     </ol>
+    </section>
+
+    <section id="event_practice">
+      <h2>강아지 건강 레시피 구독</h2>
+
+      <div class="event-grid">
+        <article class="event-card">
+          <h3>화면 테마</h3>
+          <button id="themeButton" type="button">다크 테마로 바꾸기</button>
+        </article>
+
+        <article class="event-card">
+            <h3>구독자 정보</h3>
+            <label for="nickname">수신자 이름</label>
+            <input type="text" id="nickname" maxlength="10">
+            <p id="nicknameCount" aria-live="polite">0 /10</p>
+        </article>
+
+        <article class="event-card">
+          <h3>개인 정보 활용 동의</h3>
+          <label class="agree-row">
+            <input type="checkbox" id="agreeCheckbox">
+            개인정보 수집 및 이용에 동의합니다.
+          </label>
+          <p id="agreeMessage" aria-live="polite">
+            동의 후 소식을 받아볼 수 있습니다.
+          </p>
+          <button id="startButton" type="button" disabled>
+            동의 여부 확인
+          </button>
+        </article>
+      </div>
     </section>
 
     <section id="subscribe" class="subscribe-card">
