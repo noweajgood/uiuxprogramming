@@ -143,11 +143,90 @@
             동의 후 소식을 받아볼 수 있습니다.
           </p>
           <button id="startButton" type="button" disabled>
-            동의 여부 확인
+            강아지 정보 입력하기
           </button>
         </article>
       </div>
     </section>
+
+    <dialog id = "recording-dialog" aria-labelledby="recording-title" aria-describedby="recording-description">
+      <h2 id="recording-title">강아지 정보 입력 시작</h2>
+      <p id="recording-description"> 강아지 정보를 먼저 입력 후 원하는 레시피 선택를 선택할 수 있습니다.</p>
+      <div class = "dialog-buttons">
+        <button id="recording-cancel" type="button">돌아가기</button>
+        <button id="recording-confirm" type="button">동의하고 설정 시작하기</button>
+      </div>
+    </dialog>
+
+    <section id = "training-flow" class="training-flow" hidden>
+      <h2>강아지 정보 입력</h2>
+      <p class="progress" aria-label="진행 상황">
+        <span class="progress-item">1. 정보</span>
+        <span class="progress-item">2. 조건</span>
+        <span class="progress-item">3. 확인</span>
+      </p>
+
+      <section class="step" data-step="1" hidden>
+        <h3>1. 강아지 정보를 입력해 주세요</h3>
+        <label for ="dogName">강아지 이름</label>
+        <input id="dogName" type="text" placeholder="강아지 이름을 입력하세요" aria-describedby="title-error">
+        <p id="title-error" class="error-message" aria-live="polite"></p>
+        <button id="title-next" type="button">세부정보 입력하기</button>
+      </section>
+
+      <section class="step" data-step="2" hidden>
+         <h3>2. 강아지 세부 정보를 입력해 주세요.</h3>
+
+          <!-- 강아지 나이 -->
+        <label for="dogAge">강아지 나이</label>
+        <input id="dogAge" type="number" placeholder="강아지 나이를 입력하세요" aria-describedby="age-error">
+        <p id="age-error" class="error-message" aria-live="polite"></p>
+
+          <!-- 강아지 몸무게 -->
+        <label for="dogWeight">강아지 몸무게(kg)</label>
+        <input id="dogWeight" type="number" step="any" placeholder="강아지 몸무게를 입력하세요" aria-describedby="weight-error">
+        <p id="weight-error" class="error-message" aria-live="polite"></p>
+
+          <!-- 중성화 여부 -->
+        <fieldset class="neutered-group">
+         <legend>중성화 여부</legend>
+         <div class="radio-options">
+          <input type="radio" id="neutered-y" name="isNeutered" value="Y" aria-describedby="neutered-error">
+          <label for="neutered-y">완료 (Y)</label>
+
+          <input type="radio" id="neutered-n" name="isNeutered" value="N" aria-describedby="neutered-error">
+          <label for="neutered-n">미완료 (N)</label>
+        </div>
+        <p id="neutered-error" class="error-message" aria-live="polite"></p>
+      </fieldset>
+
+      <div class="step-actions">
+        <button id="condition-prev" type="button" class="btn-prev">이전</button>
+        <button id="condition-next" type="button" class="btn-next">입력 정보 확인하기</button>
+      </div>
+    </section>
+
+    <section class="step" data-step="3" hidden>
+      <h3>3. 입력한 정보를 확인해주세요</h3>
+      <ul id="dogInfoList">
+        <li><strong>강아지 이름:</strong> <span id="summary-name"></span></li>
+        <li><strong>강아지 나이:</strong> <span id="summary-age"></span></li>
+        <li><strong>강아지 몸무게:</strong> <span id="summary-weight"></span></li>
+        <li><strong>중성화 여부:</strong> <span id="summary-neutered"></span></li>  
+      </ul>
+      <div class="step-actions">
+        <button id="summary-prev" type="button" class="btn-prev">수정하기</button>
+        <button id="finish-button" type="button" class="btn-next">강아지 정보 입력 완료</button>
+      </div>
+    </section>
+
+    <section class="step" data-step="4" hidden>
+      <h3>강아지 정보 입력이 완료되었습니다.</h3>
+      <p>설정한 내용을 확인했습니다. 필요하면 다시 설정할 수 있습니다.</p>
+      <button id="resetButton" type="button">다시 설정하기</button>
+    </section>
+    
+  </section>
 
     <section id="subscribe" class="subscribe-card">
         <h2>소식 받기</h2>

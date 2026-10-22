@@ -281,6 +281,204 @@ body.dark .panel{
     border-color: #50515f;
 }
 
+#recording-dialog{
+    width: min(520px, calc(100% - 32px));
+    max-width: none;
+    padding: 24px;
+    border: 1px solid #deddea;
+    border-radius: 12px;
+    background-color: #f4f3ff;
+    color: #292a31;
+}
+
+#recording-dialog::backdrop{background-color: rgba(30, 20, 39, .6);}
+#recording-dialog .dialog-actions{
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
+#recording-dialog button{min-width: 44px;}
+body.dark #recording-dialog {background: #50515f; color: #fff;}
+
+.training-flow {
+  max-width: 540px;
+  margin: 40px auto;
+  padding: 28px;
+  border: 1px solid #deddea;
+  border-radius: 24px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.training-flow h2 {
+  margin: 0 0 16px 0;
+  font-size: 22px;
+  color: #1a1a24;
+}
+
+/* 단계별 숨김 처리 */
+.training-flow[hidden],
+.training-flow .step[hidden],
+.training-flow fieldset[hidden] {
+  display: none !important;
+}
+
+/* ===================================================
+   4. 진행 상황 표시바 (Progress)
+   =================================================== */
+.training-flow .progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 28px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.training-flow .progress-item {
+  font-size: 14px;
+  color: #9494a8;
+  font-weight: 500;
+}
+
+/* 활성화된 진행 단계 */
+.training-flow .progress-item.is-active {
+  color: #635bff;
+  font-weight: 800;
+}
+
+/* ===================================================
+   5. 입력 폼 레이아웃 (Step 컨텐츠)
+   =================================================== */
+.training-flow .step h3 {
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  color: #2b2b36;
+}
+
+.training-flow label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333340;
+}
+
+.training-flow input[type="text"],
+.training-flow input[type="number"] {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid #dcdce6;
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.training-flow input[type="text"]:focus,
+.training-flow input[type="number"]:focus {
+  border-color: #635bff;
+  box-shadow: 0 0 0 3px rgba(99, 91, 255, 0.15);
+}
+
+/* 라디오 옵션 그룹 (중성화 여부) */
+.training-flow fieldset.neutered-group {
+  margin: 0 0 8px 0;
+  padding: 0;
+  border: none;
+}
+
+.training-flow fieldset.neutered-group legend {
+  padding: 0;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333340;
+}
+
+.training-flow .radio-options {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.training-flow .radio-options label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 0;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+/* ===================================================
+   6. 에러 상태 디자인
+   =================================================== */
+.training-flow .error-message {
+  min-height: 22px;
+  margin: 6px 0 16px 0;
+  font-size: 13px;
+  color: #9d243d;
+  font-weight: 600;
+}
+
+.training-flow input.has-error {
+  border-color: #9d243d;
+  background-color: #fff9f9;
+}
+
+.training-flow input.has-error:focus {
+  box-shadow: 0 0 0 3px rgba(157, 36, 61, 0.15);
+}
+
+/* ===================================================
+   7. 버튼 디자인
+   =================================================== */
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+/* 보조/취소 버튼 */
+#recording-cancel {
+  background-color: #f1f1f5;
+  color: #555566;
+}
+
+#recording-cancel:hover {
+  background-color: #e5e5ed;
+}
+
+/* 기본 강조/진행 버튼 */
+#recording-confirm,
+.training-flow button[type="button"] {
+  background-color: #635bff;
+  color: #ffffff;
+}
+
+#recording-confirm:hover,
+.training-flow button[type="button"]:hover {
+  background-color: #5247e6;
+}
+
+/* 단계 이동 버튼 배치 */
+.training-flow .step button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 14px;
+  font-size: 15px;
+}
+
 /*웹페이지가 표시되는 가로 폭이 768px 이하일 때 적용*/
 @media (max-width: 768px) {
     body{
@@ -334,6 +532,16 @@ body.dark .panel{
         min-height: 48px;
     }
 
+    .tabs {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .tab {
+        width: 100%;
+        text-align: left;
+    }
+
     #subscribeMessage {
         margin-top: 16px;
         color: #555763;
@@ -352,4 +560,13 @@ body.dark .panel{
         background-color: #a8a8b2;
         cursor: not-allowed;
     }
+
+    .training-flow {padding: 20px;}
+    #recording-dialog .dialog-actions {flex-direction: column-reverse;}
+    #recording-dialog .dialog-actions button {width: 100%;}
+    .training-flow .step-actions {flex-direction: column-reverse;}
+    .training-flow .step-actions button {width: 100%;}
+    .training-flow input[type="checkbox"],
+    .training-flow input[type="radio"] {width: auto;}
+
 }
