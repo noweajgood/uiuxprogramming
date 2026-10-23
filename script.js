@@ -67,7 +67,7 @@ function handleAgreeChange() {
     const agreed = agreeCheckbox.checked;
     startButton.disabled = !agreed;
     agreeMessage.textContent = agreed 
-    ? "구독을 시작할 수 있습니다." 
+    ? "강아지 정보를 입력할 수 있습니다." 
     : "시작 버튼을 누르려면 동의가 필요합니다.";
 
     if (agreed) {
@@ -311,4 +311,50 @@ restartButton?.addEventListener("click", () => {
 
   // 5. 첫 단계(Step 1: 인덱스 0)로 이동
   showStep(0);
+});
+
+
+// 신규 기능: 맞춤 레시피 빠른 조회 카드 인터랙션
+
+const recipeGoalSelect = document.querySelector("#recipeGoal");
+const recipeGoalError = document.querySelector("#recipeGoalError");
+const searchRecipeBtn = document.querySelector("#searchRecipeBtn");
+const recipeResultBox = document.querySelector("#recipeResultBox");
+const resultRecipeName = document.querySelector("#resultRecipeName");
+const resultRecipeDesc = document.querySelector("#resultRecipeDesc");
+
+const recipeData = {
+  diet: {
+    name: "단호박 닭가슴살 찜",
+    desc: "기름기를 뺀 닭가슴살과 포만감을 주는 단호박으로 부담 없이 체중을 조절합니다."
+  },
+  allergy: {
+    name: "저자극 오리고기 연근볼",
+    desc: "육류 알레르기 발생 확률이 낮은 오리고기와 소화에 좋은 연근을 활용한 식단입니다."
+  },
+  vital: {
+    name: "영양 가득 소고기 황태죽",
+    desc: "단백질이 풍부한 소고기와 염분을 뺀 황태로 활력을 채워주는 보양 레시피입니다."
+  }
+};
+
+searchRecipeBtn?.addEventListener("click", () => {
+  const selectedGoal = recipeGoalSelect.value;
+
+  // 1. 유효성 검사 (아무것도 안 골랐을 때)
+  if (!selectedGoal) {
+    recipeGoalError.textContent = "식단 고민을 목록에서 선택해 주세요.";
+    recipeGoalSelect.classList.add("has-error");
+    recipeResultBox.hidden = true;
+    return;
+  }
+
+  // 2. 에러 해제 및 결과 동적 표시
+  recipeGoalError.textContent = "";
+  recipeGoalSelect.classList.remove("has-error");
+
+  const result = recipeData[selectedGoal];
+  resultRecipeName.textContent = "🍲 " + result.name;
+  resultRecipeDesc.textContent = result.desc;
+  recipeResultBox.hidden = false;
 });

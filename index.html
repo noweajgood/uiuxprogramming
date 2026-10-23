@@ -37,8 +37,8 @@
         
         <img src="assets/images/dog healthy food.jpeg" alt="건강식을 먹는 강아지">
         
-        <p>강아지에게 필요한 영양소가 무엇인지 알 수 있습니다.</p>
-        <P>필요한 영양분 공급을 위한 재료 및 레시피를 제공합니다.</P>
+        <p>강아지 식단 고민 별 맞춤형 건강식 레시피를 알 수 있습니다.</p>
+        <P>강아지에게 필요한 영양분 공급을 위한 재료 및 레시피를 제공합니다.</P>
     </section>
 
     <section id="features">
@@ -52,7 +52,7 @@
               aria-controls="feature-practice"
               aria-selected="true"
               data-target="feature-practice">
-              영양소 확인
+              강아지 정보 등록
          </button> 
 
           <button
@@ -63,7 +63,7 @@
               aria-controls="feature-recipe"
               aria-selected="false"
               data-target="feature-recipe">
-              재료 안내
+              식단 고민별 추천
           </button>
     
           <button
@@ -83,8 +83,8 @@
             class="panel is-active"
             role="tabpanel"
             aria-labelledby="tab-practice">
-            <h3>영양소 확인</h3>
-            <p>강아지에게 필요한 영양소를 확인할 수 있습니다.</p>
+            <h3>반려견 맞춤 신체 정보 등록</h3>
+            <p>강아지의 나이, 몸무게, 중성화 여부 등 세부 건강 정보를 등록하여 1:1 맞춤 영양 관리를 시작합니다.</p>
         </div>
 
         <div
@@ -92,8 +92,8 @@
             class="panel"
             role="tabpanel"
             aria-labelledby="tab-recipe" hidden>
-            <h3>재료 안내</h3>
-            <p>레시피에 필요한 재료를 확인할 수 있습니다.</p>
+            <h3>식단 고민별 빠른 레시피 추천</h3>
+            <p>체중 감량, 알레르기 케어, 원기 회복 등 우리 강아지의 현재 고민에 꼭 맞는 건강식 레시피를 바로 확인합니다.</p>
         </div>
 
         <div
@@ -101,8 +101,8 @@
             class="panel"
             role="tabpanel"
             aria-labelledby="tab-feedback" hidden>
-            <h3>레시피 소개</h3>
-            <p>레시피에 따라 건강식을 만들어 강아지에게 제공합니다.</p>
+            <h3>건강식 재료 및 홈메이드 가이드</h3>
+            <p>신선하고 안전한 식재료 구성과 집에서 손쉽게 완성할 수 있는 건강 조리법을 단계별로 안내합니다.</p>
         </div>
     </section>
 
@@ -111,14 +111,14 @@
     <ol>
       <li>회원가입 및 로그인</li>
       <li>강아지 정보를 입력합니다.</li>
-      <li>강아지에게 필요한 영양소를 확인합니다.</li>
-      <li>레시피에 필요한 재료를 확인하고 구매합니다.</li>
+      <li>식단 고민별 맞춤 레시피를 확인합니다.</li>
+      <li>레시피에 필요한 재료를 확인합니다.</li>
       <li>레시피에 따라 건강식을 만들어 강아지에게 제공합니다.</li>
     </ol>
     </section>
 
     <section id="event_practice">
-      <h2>강아지 건강 레시피 구독</h2>
+      <h2>강아지 건강 레시피</h2>
 
       <div class="event-grid">
         <article class="event-card">
@@ -127,14 +127,14 @@
         </article>
 
         <article class="event-card">
-            <h3>구독자 정보</h3>
-            <label for="nickname">수신자 이름</label>
+            <h3>회원 정보</h3>
+            <label for="nickname">이름</label>
             <input type="text" id="nickname" maxlength="10">
             <p id="nicknameCount" aria-live="polite">0 /10</p>
         </article>
 
         <article class="event-card">
-          <h3>개인 정보 활용 동의</h3>
+          <h3>강아지 정보 입력</h3>
           <label class="agree-row">
             <input type="checkbox" id="agreeCheckbox">
             개인정보 수집 및 이용에 동의합니다.
@@ -146,6 +146,27 @@
             강아지 정보 입력하기
           </button>
         </article>
+
+        <article class="event-card">
+          <h3>식단 고민별 레시피 조회</h3>
+          <label for="recipeGoal">식단 고민을 선택해 주세요</label>
+          <select id="recipeGoal">
+            <option value="">-- 고민 선택 --</option>
+            <option value="diet">체중 감량 (저칼로리)</option>
+            <option value="allergy">알레르기 케어 (저자극)</option>
+            <option value="vital">원기 회복 (고단백)</option>
+          </select>
+          <p id="recipeGoalError" class="error-message" aria-live="polite"></p>
+
+          <button id="searchRecipeBtn" type="button">추천 식단 확인하기</button>
+
+          <!-- 결과 피드백 영역 -->
+          <div id="recipeResultBox" class="recipe-result-box" hidden>
+            <h4 id="resultRecipeName">레시피 이름</h4>
+            <p id="resultRecipeDesc">레시피 설명</p>
+          </div>
+        </article>
+
       </div>
     </section>
 

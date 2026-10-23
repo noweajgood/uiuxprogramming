@@ -183,15 +183,20 @@ button:active {
     width: 100%;
 }
 
-.agree-row{
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
+.agree-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  word-break: keep-all; /* 한 글자씩 세로로 떨어지는 현상 방지 */
+  line-height: 1.5;
 }
 
-.agree-row input{
-    flex: 0 0 auto;
-    margin-top: 6px;
+.agree-row input {
+  flex: 0 0 auto;
+  margin-top: 3px;
+  width: 18px;
+  height: 18px;
 }
 
 #startButton:disabled {
@@ -478,6 +483,37 @@ button:active {
   padding: 14px;
   font-size: 15px;
 }
+
+/* 4번째 카드 내부 셀렉트 및 결과 박스 스타일 */
+.event-card select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #b8b7c5;
+  border-radius: 10px;
+  font: inherit;
+  margin-bottom: 8px;
+}
+
+.recipe-result-box {
+  margin-top: 14px;
+  padding: 12px;
+  background-color: #f4f3ff;
+  border: 1px solid #d4d0fc;
+  border-radius: 10px;
+}
+
+.recipe-result-box h4 {
+  margin: 0 0 6px 0;
+  font-size: 15px;
+  color: #635bff;
+}
+
+.recipe-result-box p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
 
 /*웹페이지가 표시되는 가로 폭이 768px 이하일 때 적용*/
 @media (max-width: 768px) {
