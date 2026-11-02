@@ -418,23 +418,77 @@ body.dark #recording-dialog {background: #50515f; color: #fff;}
 }
 
 /* ===================================================
-   6. 에러 상태 디자인
+   6. 폼 상태 피드백 및 조건부 필드 스타일 (9주차 적용)
    =================================================== */
-.training-flow .error-message {
-  min-height: 22px;
-  margin: 6px 0 16px 0;
-  font-size: 13px;
-  color: #9d243d;
-  font-weight: 600;
+.field-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
 }
 
-.training-flow input.has-error {
+.field-meta p {
+  margin: 5px 0 0;
+  font-size: 12px;
+  color: #555763;
+}
+
+#title-count {
+  flex: none;
+}
+
+.field-error {
+  min-height: 22px;
+  margin: 6px 0 10px;
+  color: #9d243d;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* 입력 조건 충족 상태 (초록색 테두리 및 도움말) */
+.field.is-valid input {
+  border-color: #16805d;
+}
+
+.field.is-valid #title-help {
+  color: #116448;
+  font-weight: 700;
+}
+
+/* 오류 발생 상태 (빨간색 테두리 및 배경) */
+.field.has-error input {
   border-color: #9d243d;
   background-color: #fff9f9;
 }
 
-.training-flow input.has-error:focus {
+.field.has-error input:focus {
   box-shadow: 0 0 0 3px rgba(157, 36, 61, 0.15);
+}
+
+/* 조건부 알레르기 영역 스타일 */
+.allergy-field {
+  margin: 16px 0;
+}
+
+.allergy-options {
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px dashed #dcdce6;
+  border-radius: 8px;
+  background-color: #f7f7fb;
+}
+
+.allergy-options[hidden] {
+  display: none !important;
+}
+
+/* 제출 처리 상태 안내 문구 */
+.submit-status {
+  min-height: 24px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #635bff;
+  margin: 12px 0;
+  text-align: center;
 }
 
 /* ===================================================

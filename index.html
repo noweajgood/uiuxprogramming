@@ -179,75 +179,129 @@
       </div>
     </dialog>
 
-    <section id = "training-flow" class="training-flow" hidden>
-      <h2>강아지 정보 입력</h2>
+    <section id="training-flow" class="training-flow" hidden>
+      <h2>강아지 맞춤 건강식 플랜 설정</h2>
       <p class="progress" aria-label="진행 상황">
-        <span class="progress-item">1. 정보</span>
-        <span class="progress-item">2. 조건</span>
-        <span class="progress-item">3. 확인</span>
+        <span class="progress-item">1. 기본 정보</span>
+        <span class="progress-item">2. 세부 조건</span>
+        <span class="progress-item">3. 정보 확인</span>
       </p>
 
-      <section class="step" data-step="1" hidden>
-        <h3>1. 강아지 정보를 입력해 주세요</h3>
-        <label for ="dogName">강아지 이름</label>
-        <input id="dogName" type="text" placeholder="강아지 이름을 입력하세요" aria-describedby="title-error">
-        <p id="title-error" class="error-message" aria-live="polite"></p>
-        <button id="title-next" type="button">세부정보 입력하기</button>
+      <form id="recipe-form" novalidate aria-busy="false">
+        <!-- Step 1: 반려견 이름 (글자 수 표시 + 실시간 상태 피드백) -->
+        <section class="step" data-step="1" hidden>
+          <h3>1. 강아지 정보를 입력해 주세요</h3>
+          <div class="field" id="title-field">
+            <label for="dogName">
+              강아지 이름 <span class="required" style="color: #9d243d; font-size: 13px;">필수</span>
+            </label>
+            <input
+              id="dogName"
+              name="dogName"
+              type="text"
+              minlength="2"
+              maxlength="10"
+              required
+              placeholder="예: 보리, 초코 (2~10자)"
+              aria-describedby="title-help title-count title-error"
+            >
+            <div class="field-meta">
+              <p id="title-help">반려견을 구분할 수 있도록 2자 이상 입력해 주세요.</p>
+              <p id="title-count" aria-live="polite">0 / 10자</p>
+            </div>
+            <p id="title-error" class="field-error" role="alert"></p>
+          </div>
+          <button id="title-next" type="button">세부정보 입력하기</button>
+        </section>
+
+        <!-- Step 2: 세부 정보 및 조건부 알레르기 영역 -->
+        <section class="step" data-step="2" hidden>
+          <h3>2. 강아지 세부 정보를 입력해 주세요.</h3>
+
+          <div class="field">
+            <label for="dogAge">강아지 나이 (살)</label>
+            <input id="dogAge" name="dogAge" type="number" placeholder="강아지 나이를 입력하세요" aria-describedby="age-error">
+            <p id="age-error" class="field-error" role="alert"></p>
+          </div>
+
+          <div class="field">
+            <label for="dogWeight">강아지 몸무게 (kg)</label>
+            <input id="dogWeight" name="dogWeight" type="number" step="any" placeholder="강아지 몸무게를 입력하세요" aria-describedby="weight-error">
+            <p id="weight-error" class="field-error" role="alert"></p>
+          </div>
+
+          <!-- 중성화 여부 라디오 -->
+          <fieldset class="neutered-group">
+            <legend>중성화 여부</legend>
+            <div class="radio-options">
+              <input type="radio" id="neutered-y" name="isNeutered" value="Y" aria-describedby="neutered-error">
+              <label for="neutered-y">완료 (Y)</label>
+              <input type="radio" id="neutered-n" name="isNeutered" value="N" aria-describedby="neutered-error">
+              <label for="neutered-n">미완료 (N)</label>
+            </div>
+            <p id="neutered-error" class="field-error" role="alert"></p>
+          </fieldset>
+
+          <!-- 조건부 입력: 알레르기 여부 (교수자 실습의 qna-field 대응) -->
+          <div class="field allergy-field">
+            <label class="check-row" for="allergy-option">
+              <input
+                id="allergy-option"
+                name="hasAllergy"
+                type="checkbox"
+                value="included"
+                aria-controls="allergy-options"
+                aria-expanded="false"
+              >
+              <span>
+                <strong>식이 알레르기가 있어요</strong>
+                <small style="display: block; color: #555763; font-size: 13px;">주의해야 할 식재료를 선택할 수 있습니다.</small>
+              </span>
+            </label>
+            <fieldset id="allergy-options" class="allergy-options" hidden>
+              <legend>주의 식재료 선택</legend>
+              <div class="inline-options" style="display: flex; gap: 14px; margin-top: 6px;">
+                <label><input type="radio" name="allergy-type" value="육류(닭/소)" disabled> 닭/소고기</label>
+                <label><input type="radio" name="allergy-type" value="유제품" checked disabled> 유제품</label>
+                <label><input type="radio" name="allergy-type" value="곡물" disabled> 곡물류</label>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="step-actions">
+            <button id="condition-prev" type="button" class="btn-prev">이전</button>
+            <button id="condition-next" type="button" class="btn-next">입력 정보 확인하기</button>
+          </div>
+        </section>
+
+        <!-- Step 3: 확인 및 비동기 제출 -->
+        <section class="step" data-step="3" hidden>
+          <h3>3. 입력한 정보를 확인해주세요</h3>
+          <ul id="dogInfoList">
+            <li><strong>강아지 이름:</strong> <span id="summary-name"></span></li>
+            <li><strong>강아지 나이:</strong> <span id="summary-age"></span></li>
+            <li><strong>강아지 몸무게:</strong> <span id="summary-weight"></span></li>
+            <li><strong>중성화 여부:</strong> <span id="summary-neutered"></span></li>
+            <li><strong>알레르기 케어:</strong> <span id="summary-allergy">없음</span></li>
+          </ul>
+
+          <!-- 비동기 저장 안내 문구 (실습 요구사항) -->
+          <p id="submit-status" class="submit-status" role="status" aria-live="polite"></p>
+
+          <div class="step-actions">
+            <button id="summary-prev" type="button" class="btn-prev">수정하기</button>
+            <button id="save-plan" type="submit" class="btn-next">맞춤 건강식 플랜 저장하기 →</button>
+          </div>
+        </section>
+      </form>
+
+      <!-- Step 4: 완료 화면 및 다시 설정 버튼 -->
+      <section class="step" data-step="4" hidden>
+        <h3>강아지 맞춤 건강식 저장이 완료되었습니다.</h3>
+        <p id="complete-message">설정한 내용을 확인했습니다. 필요하면 다시 설정할 수 있습니다.</p>
+        <button id="restart-button" type="button">새 플랜 시작하기</button>
       </section>
-
-      <section class="step" data-step="2" hidden>
-         <h3>2. 강아지 세부 정보를 입력해 주세요.</h3>
-
-          <!-- 강아지 나이 -->
-        <label for="dogAge">강아지 나이</label>
-        <input id="dogAge" type="number" placeholder="강아지 나이를 입력하세요" aria-describedby="age-error">
-        <p id="age-error" class="error-message" aria-live="polite"></p>
-
-          <!-- 강아지 몸무게 -->
-        <label for="dogWeight">강아지 몸무게(kg)</label>
-        <input id="dogWeight" type="number" step="any" placeholder="강아지 몸무게를 입력하세요" aria-describedby="weight-error">
-        <p id="weight-error" class="error-message" aria-live="polite"></p>
-
-          <!-- 중성화 여부 -->
-        <fieldset class="neutered-group">
-         <legend>중성화 여부</legend>
-         <div class="radio-options">
-          <input type="radio" id="neutered-y" name="isNeutered" value="Y" aria-describedby="neutered-error">
-          <label for="neutered-y">완료 (Y)</label>
-
-          <input type="radio" id="neutered-n" name="isNeutered" value="N" aria-describedby="neutered-error">
-          <label for="neutered-n">미완료 (N)</label>
-        </div>
-        <p id="neutered-error" class="error-message" aria-live="polite"></p>
-      </fieldset>
-
-      <div class="step-actions">
-        <button id="condition-prev" type="button" class="btn-prev">이전</button>
-        <button id="condition-next" type="button" class="btn-next">입력 정보 확인하기</button>
-      </div>
     </section>
-
-    <section class="step" data-step="3" hidden>
-      <h3>3. 입력한 정보를 확인해주세요</h3>
-      <ul id="dogInfoList">
-        <li><strong>강아지 이름:</strong> <span id="summary-name"></span></li>
-        <li><strong>강아지 나이:</strong> <span id="summary-age"></span></li>
-        <li><strong>강아지 몸무게:</strong> <span id="summary-weight"></span></li>
-        <li><strong>중성화 여부:</strong> <span id="summary-neutered"></span></li>  
-      </ul>
-      <div class="step-actions">
-        <button id="summary-prev" type="button" class="btn-prev">수정하기</button>
-        <button id="finish-button" type="button" class="btn-next">강아지 정보 입력 완료</button>
-      </div>
-    </section>
-
-    <section class="step" data-step="4" hidden>
-      <h3>강아지 정보 입력이 완료되었습니다.</h3>
-      <p>설정한 내용을 확인했습니다. 필요하면 다시 설정할 수 있습니다.</p>
-      <button id="resetButton" type="button">다시 설정하기</button>
-    </section>
-    
-  </section>
 
     <section id="subscribe" class="subscribe-card">
         <h2>소식 받기</h2>

@@ -114,117 +114,184 @@ tabs.forEach(function (tab) {
     tab.addEventListener("click", handleTabClick);
 });
 
-// 1. 전체 컨테이너 및 스텝/진행바 요소
+// ===================================================
+// 1. 전체 컨테이너 및 다단계 폼 요소 (9주차 적용)
+// ===================================================
 const trainingFlow = document.querySelector("#training-flow");
+const form = document.querySelector("#recipe-form");
 const flowSteps = trainingFlow.querySelectorAll(".step");
-const progressItems = trainingFlow.querySelectorAll(".progress-item, .progress__item");
+const progressItems = trainingFlow.querySelectorAll(".progress-item");
 
-// 3. Step 1 (기본 정보: 이름)
+// Step 1: 반려견 이름 및 피드백 요소
+const titleField = document.querySelector("#title-field");
 const titleInput = document.querySelector("#dogName");
+const titleHelp = document.querySelector("#title-help");
+const titleCount = document.querySelector("#title-count");
 const titleError = document.querySelector("#title-error");
 const titleNext = document.querySelector("#title-next");
 
-// 4. Step 2 (세부 정보: 나이, 몸무게, 중성화)
+// Step 2: 세부 정보 및 조건부 알레르기 요소
 const dogAge = document.querySelector("#dogAge");
 const ageError = document.querySelector("#age-error");
 const dogWeight = document.querySelector("#dogWeight");
 const weightError = document.querySelector("#weight-error");
 const neuteredError = document.querySelector("#neutered-error");
-const neuteredRadios = document.querySelectorAll('input[name="isNeutered"]');
+const allergyOption = document.querySelector("#allergy-option");
+const allergyOptions = document.querySelector("#allergy-options");
+const allergyTypeInputs = [...document.querySelectorAll('input[name="allergy-type"]')];
 
-// 이전/다음 버튼
-const conditionPrev = document.querySelector("#condition-prev"); 
+const conditionPrev = document.querySelector("#condition-prev");
 const conditionNext = document.querySelector("#condition-next");
-const optionNext = conditionNext;
 
-startButton.addEventListener("click", () => {
-  recordingDialog.showModal();
-});
-
-// 5. Step 3 (최종 요약 확인창)
+// Step 3: 요약 및 저장 상태 요소
 const summaryName = document.querySelector("#summary-name");
 const summaryAge = document.querySelector("#summary-age");
 const summaryWeight = document.querySelector("#summary-weight");
 const summaryNeutered = document.querySelector("#summary-neutered");
+const summaryAllergy = document.querySelector("#summary-allergy");
 const summaryPrev = document.querySelector("#summary-prev");
-const finishButton = document.querySelector("#finish-button");
+const saveButton = document.querySelector("#save-plan");
+const submitStatus = document.querySelector("#submit-status");
 const restartButton = document.querySelector("#restart-button");
 
-// 6. 데이터 저장 객체 
-const formData = {
-  name: "",
-  age: null,
-  weight: null,
-  isNeutered: "" // "Y" 또는 "N"
-};
+// 테스트용 저장 실패 플래그 (?save-error=1 주소 접속 확인용)
+const forceSaveFailure = new URLSearchParams(location.search).has("save-error");
 
-function showStep(index) {
-  flowSteps.forEach((step, i) => { step.hidden = i !== index; });
-  progressItems.forEach((item, i) => {
-    item.classList.toggle("is-active", i === index);
-  });
-}
+let currentStep = 1;
 
-// 2. 다이얼로그 요소
+// ===================================================
+// 2. 다이얼로그 제어
+// ===================================================
 const recordingDialog = document.querySelector("#recording-dialog");
 const recordingCancel = document.querySelector("#recording-cancel");
 const recordingConfirm = document.querySelector("#recording-confirm");
 
 function revokeRecordingAgreement() {
-  recordingDialog.close(); // 다이얼로그 닫기
-  trainingFlow.hidden = true; // 메인 폼 숨기기
+  recordingDialog.close();
+  trainingFlow.hidden = true;
 }
 
-// 1. 다이얼로그 취소/돌아가기 버튼 클릭 시
-recordingCancel.addEventListener("click", () => {
-  recordingDialog.close();
-  revokeRecordingAgreement();
-});
-
-// 2. ESC 키 등으로 다이얼로그가 닫힐 때(cancel 이벤트) 취소 처리
+recordingCancel.addEventListener("click", revokeRecordingAgreement);
 recordingDialog.addEventListener("cancel", revokeRecordingAgreement);
 
-// 3. 동의하고 설정 시작하기 버튼 클릭 시
+startButton.addEventListener("click", () => {
+  recordingDialog.showModal();
+});
+
 recordingConfirm.addEventListener("click", () => {
   recordingDialog.close();
   trainingFlow.hidden = false;
-  showStep(0);
+  showStep(1);
   trainingFlow.scrollIntoView({ behavior: "smooth" });
   titleInput.focus();
 });
 
-function validateTitle() {
-  const value = titleInput.value.trim();
-  if (!value) {
-    titleError.textContent = "강아지 이름을 입력해 주세요.";
-    titleInput.classList.add("has-error");
-    titleInput.focus();
-    return false;
+// ===================================================
+// 3. 조건부 알레르기 영역 상태 동기화 (유닛 01 실습 대응)
+// ===================================================
+function syncAllergyFields() {
+  const open = allergyOption.checked;
+  allergyOption.setAttribute("aria-expanded", String(open));
+  allergyOptions.hidden = !open;
+  allergyTypeInputs.forEach((input) => {
+    input.disabled = !open;
+  });
+}
+
+allergyOption.addEventListener("change", syncAllergyFields);
+syncAllergyFields();
+
+// ===================================================
+// 4. 입력 경험 및 실시간 글자 수/검증 (유닛 02 실습 대응)
+// ===================================================
+function updateTitleExperience() {
+  const length = titleInput.value.length;
+  const enough = titleInput.value.trim().length >= 2;
+  const invalid = titleInput.getAttribute("aria-invalid") === "true";
+
+  titleCount.textContent = `${length} / 10자`;
+  titleField.classList.toggle("is-valid", enough && !invalid);
+
+  if (!invalid) {
+    titleHelp.textContent = enough
+      ? "입력 조건을 충족했습니다."
+      : "반려견을 구분할 수 있도록 2자 이상 입력해 주세요.";
   }
+}
+
+function showTitleError(message) {
+  titleInput.setAttribute("aria-invalid", "true");
+  titleError.textContent = message;
+  titleField.classList.remove("is-valid");
+  titleField.classList.add("has-error");
+  return false;
+}
+
+function clearTitleError() {
+  titleInput.removeAttribute("aria-invalid");
   titleError.textContent = "";
-  titleInput.classList.remove("has-error");
-  formData.name = value; // 강사의 formData.title 대신 강아지 이름(name)으로 저장
+  titleField.classList.remove("has-error");
+  updateTitleExperience();
+}
+
+function validateTitle() {
+  const title = titleInput.value.trim();
+
+  if (!title) {
+    return showTitleError("강아지 이름을 입력해 주세요.");
+  }
+  if (title.length < 2) {
+    return showTitleError("강아지 이름을 2자 이상 입력해 주세요.");
+  }
+
+  clearTitleError();
   return true;
 }
 
+titleInput.addEventListener("input", () => {
+  updateTitleExperience();
+  if (titleInput.getAttribute("aria-invalid") === "true") {
+    validateTitle();
+  }
+});
+
+// ===================================================
+// 5. 단계 전환 및 초점 이동
+// ===================================================
+function showStep(stepNumber) {
+  currentStep = stepNumber;
+  flowSteps.forEach((step, i) => {
+    step.hidden = i !== (stepNumber - 1);
+  });
+  progressItems.forEach((item, i) => {
+    item.classList.toggle("is-active", i === (stepNumber - 1));
+  });
+
+  // 새 단계 제목으로 초점 이동 (접근성 가이드 준수)
+  const heading = flowSteps[stepNumber - 1].querySelector("h3");
+  if (heading) {
+    heading.tabIndex = -1;
+    heading.focus({ preventScroll: true });
+  }
+}
+
 titleNext.addEventListener("click", () => {
-  if (!validateTitle()) return;
-  showStep(1); // 다음 단계(Step 2: 세부 정보)로 이동
+  if (!validateTitle()) {
+    titleInput.focus();
+    return;
+  }
+  showStep(2);
 });
 
-// Step 2에서 '이전' 버튼 클릭 시 -> 1단계(인덱스 0)로 돌아가기
-conditionPrev?.addEventListener("click", () => {
-  showStep(0);
-});
+conditionPrev?.addEventListener("click", () => showStep(1));
+summaryPrev?.addEventListener("click", () => showStep(2));
 
-// Step 2에서 '다음' 버튼 클릭 시 (강사의 optionNext에 해당)
+// Step 2 -> Step 3 (요약 화면 데이터 바인딩)
 conditionNext.addEventListener("click", () => {
-  // 1. 값 가져오기
   const age = dogAge.value.trim();
   const weight = dogWeight.value.trim();
   const neuteredRadio = document.querySelector('input[name="isNeutered"]:checked');
 
-  // 2. 유효성 검사 (입력 확인)
   let isValid = true;
 
   if (!age || Number(age) <= 0) {
@@ -254,68 +321,115 @@ conditionNext.addEventListener("click", () => {
 
   if (!isValid) return;
 
-  // 3. formData에 저장 (강사의 formData 저장 부분에 해당)
-  formData.age = age;
-  formData.weight = weight;
-  formData.isNeutered = neuteredRadio.value;
+  // 요약 화면에 값 전달
+  if (summaryName) summaryName.textContent = titleInput.value.trim();
+  if (summaryAge) summaryAge.textContent = `${age}살`;
+  if (summaryWeight) summaryWeight.textContent = `${weight}kg`;
+  if (summaryNeutered) summaryNeutered.textContent = neuteredRadio.value === "Y" ? "완료" : "미완료";
 
-  // 4. Step 3 요약 화면 텍스트 채우기 (강사의 summary... 부분에 해당)
-  if (summaryName) summaryName.textContent = formData.name;
-  if (summaryAge) summaryAge.textContent = formData.age + "살";
-  if (summaryWeight) summaryWeight.textContent = formData.weight + "kg";
-  if (summaryNeutered) {
-    summaryNeutered.textContent = formData.isNeutered === "Y" ? "완료" : "미완료";
+  if (allergyOption.checked) {
+    const selectedType = document.querySelector('input[name="allergy-type"]:checked')?.value || "선택됨";
+    summaryAllergy.textContent = `주의 (${selectedType})`;
+  } else {
+    summaryAllergy.textContent = "없음";
   }
 
-  // 5. Step 3(인덱스 2)으로 이동
-  showStep(2);
+  showStep(3);
 });
 
-// Step 3(확인창)에서 '이전' 클릭 시 -> Step 2(인덱스 1)로 이동
-summaryPrev?.addEventListener("click", () => showStep(1));
+// ===================================================
+// 6. submit 이벤트 통합 및 비동기 저장 처리 (유닛 03 실습 대응)
+// ===================================================
+function setSubmitState(loading, message) {
+  form.setAttribute("aria-busy", String(loading));
+  saveButton.disabled = loading;
+  saveButton.textContent = loading ? "플랜 저장하는 중…" : "맞춤 건강식 플랜 저장하기 →";
+  submitStatus.textContent = message;
+}
 
-// 최종 완료 버튼 클릭 시 -> 완료 화면(인덱스 3)으로 이동
-finishButton?.addEventListener("click", () => showStep(3));
+function wait(milliseconds) {
+  return new Promise((resolve) => window.setTimeout(resolve, milliseconds));
+}
 
-// 다시 시작 버튼 클릭 시 -> 강아지 폼 데이터 및 UI 전체 초기화 후 Step 1(인덱스 0)로 복귀
+async function persistDogPlan(plan) {
+  await wait(600);
+
+  if (forceSaveFailure) {
+    throw new Error("수업용 강제 저장 실패");
+  }
+
+  const plans = JSON.parse(localStorage.getItem("dogPlans") || "[]");
+  plans.unshift(plan);
+  localStorage.setItem("dogPlans", JSON.stringify(plans));
+}
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  if (currentStep === 1) {
+    titleNext.click();
+    return;
+  }
+
+  if (currentStep !== 3) return;
+
+  // 제출 직전 1단계 이름 유효성 검사 (오류 시 해당 단계로 복귀 및 초점 이동)
+  if (!validateTitle()) {
+    showStep(1);
+    window.requestAnimationFrame(() => {
+      form.querySelector('[aria-invalid="true"]')?.focus();
+    });
+    return;
+  }
+
+  const data = new FormData(form);
+  const plan = {
+    id: typeof crypto.randomUUID === "function" ? crypto.randomUUID() : `${Date.now()}`,
+    dogName: String(data.get("dogName") || "").trim(),
+    dogAge: String(data.get("dogAge") || "").trim(),
+    dogWeight: String(data.get("dogWeight") || "").trim(),
+    isNeutered: String(data.get("isNeutered") || ""),
+    hasAllergy: data.get("hasAllergy") === "included",
+    allergyType: String(data.get("allergy-type") || ""),
+    createdAt: new Date().toISOString()
+  };
+
+  setSubmitState(true, "맞춤 건강식 플랜을 저장하고 있습니다.");
+
+  try {
+    await persistDogPlan(plan);
+    document.querySelector("#complete-message").textContent =
+      `‘${plan.dogName}’의 맞춤 건강식 플랜이 성공적으로 저장되었습니다.`;
+    setSubmitState(false, "맞춤 플랜을 저장했습니다.");
+    showStep(4);
+  } catch {
+    setSubmitState(
+      false,
+      "저장하지 못했습니다. 입력한 내용은 그대로 두었습니다. 다시 시도해 주세요."
+    );
+  }
+});
+
+// 새 플랜 시작하기 (초기화)
 restartButton?.addEventListener("click", () => {
-  // 1. formData 객체 초기화
-  formData.name = "";
-  formData.age = "";
-  formData.weight = "";
-  formData.isNeutered = "";
+  form.reset();
+  syncAllergyFields();
 
-  // 2. Step 1 입력창 및 에러 초기화
-  titleInput.value = "";
+  titleCount.textContent = "0 / 10자";
+  titleHelp.textContent = "반려견을 구분할 수 있도록 2자 이상 입력해 주세요.";
   titleError.textContent = "";
-  titleInput.classList.remove("has-error");
 
-  // 3. Step 2 입력창 및 라디오 버튼 초기화
-  dogAge.value = "";
-  dogWeight.value = "";
-  ageError.textContent = "";
-  weightError.textContent = "";
-  neuteredError.textContent = "";
-  dogAge.classList.remove("has-error");
-  dogWeight.classList.remove("has-error");
+  titleInput.removeAttribute("aria-invalid");
+  titleField.classList.remove("is-valid", "has-error");
+  setSubmitState(false, "");
 
-  document.querySelectorAll('input[name="isNeutered"]').forEach((radio) => {
-    radio.checked = false;
-  });
-
-  // 4. Step 3 요약 화면 텍스트 초기화
-  if (summaryName) summaryName.textContent = "";
-  if (summaryAge) summaryAge.textContent = "";
-  if (summaryWeight) summaryWeight.textContent = "";
-  if (summaryNeutered) summaryNeutered.textContent = "";
-
-  // 5. 첫 단계(Step 1: 인덱스 0)로 이동
-  showStep(0);
+  showStep(1);
+  titleInput.focus();
 });
 
-
-// 신규 기능: 맞춤 레시피 빠른 조회 카드 인터랙션
-
+// ===================================================
+// 7. 맞춤 레시피 빠른 조회 카드 인터랙션 (기존 기능 유지)
+// ===================================================
 const recipeGoalSelect = document.querySelector("#recipeGoal");
 const recipeGoalError = document.querySelector("#recipeGoalError");
 const searchRecipeBtn = document.querySelector("#searchRecipeBtn");
@@ -341,7 +455,6 @@ const recipeData = {
 searchRecipeBtn?.addEventListener("click", () => {
   const selectedGoal = recipeGoalSelect.value;
 
-  // 1. 유효성 검사 (아무것도 안 골랐을 때)
   if (!selectedGoal) {
     recipeGoalError.textContent = "식단 고민을 목록에서 선택해 주세요.";
     recipeGoalSelect.classList.add("has-error");
@@ -349,7 +462,6 @@ searchRecipeBtn?.addEventListener("click", () => {
     return;
   }
 
-  // 2. 에러 해제 및 결과 동적 표시
   recipeGoalError.textContent = "";
   recipeGoalSelect.classList.remove("has-error");
 
